@@ -6,7 +6,7 @@ Adds spellchecking to sunspot
 
 Add this line to your application's Gemfile:
 
-    gem 'sunspot_hierarchical_facets'
+    gem 'sunspot_suggest'
 
 And then execute:
 
@@ -14,17 +14,13 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install sunspot_hierarchical_facets
+    $ gem install sunspot_suggest
 
 ## Usage
 
 TODO: Write usage instructions here
 
 * Need jar added to solr installation, schema config etc
-
-## Example Queries
-
-http://localhost:8981/solr/articles/select?indent=true&spellcheck.q=markup_texts:(Perfrm%20HVC)&q=Perfrm%20HVC&fq=type:FactoryArticle&fq=car_uuids_sms:(8222cb90\-a822\-012a\-9d60\-f67652ef7803)&rows=0&wt=ruby
 
 ## Contributing
 
