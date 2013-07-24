@@ -39,7 +39,7 @@ describe 'spellcheck', :type => :search do
         spellcheck
       end
 
-      spellcheck = result.spellcheck
+      spellcheck = result.spellcheck_results
       collations = spellcheck.collations
       expect(collations.size).to eq(0)
 
@@ -104,7 +104,7 @@ describe 'spellcheck', :type => :search do
         spellcheck
       end
 
-      spelling_suggestions = result.spellcheck
+      spelling_suggestions = result.spellcheck_results
       collations = spelling_suggestions.collations
       expect(collations.size).to eq(2)
       expect(collations.first.query).to eq('markup_texts:(perform hvac)')

@@ -104,19 +104,21 @@ module Sunspot
       end
 
 
-      def spellcheck
-        spellcheck = Spellcheck.new
+      def spellcheck_results
+        @spellcheck_results = begin
+          spellcheck = Spellcheck.new
 
-        raw_suggestions.each_slice(2) do |k, v|
-          if k == 'collation'
-            spellcheck.add_collation(v)
-          elsif k == 'correctlySpelled'
-            spellcheck.correctly_spelled = (v == 'true')
-          else
-            spellcheck.add_suggestion(k, v)
+          raw_suggestions.each_slice(2) do |k, v|
+            if k == 'collation'
+              spellcheck.add_collation(v)
+            elsif k == 'correctlySpelled'
+              spellcheck.correctly_spelled = (v == 'true')
+            else
+              spellcheck.add_suggestion(k, v)
+            end
           end
+          spellcheck
         end
-        spellcheck
       end
 
       private
