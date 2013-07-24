@@ -1,3 +1,3 @@
-module SunspotHierarchicalFacets
-  VERSION = "0.0.2"
+module SunspotSuggest
+  VERSION = "0.0.1"
 end
