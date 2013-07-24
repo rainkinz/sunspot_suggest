@@ -1,49 +1,66 @@
 module Sunspot
+
   module Search
 
-    # TODO: Not sure about this
-    class SuggestedResult
-      attr_accessor :query, :correctly_spelled, :suggestions
-    end
+    class Spellcheck
 
-
-    # TODO: Maybe make this enumerable?
-    class SpellingSuggestions
-
+      # TODO: Firm up the names of these a bit
       class Collation
-        attr_reader :query, :corrections, :hits
+        attr_reader :query, :suggestions, :hits
 
         def initialize(args = {})
           @query = args['collationQuery']
           @hits = args['hits']
-          @corrections = parse_corrections(args['misspellingsAndCorrections'])
+          @suggestions = parse_corrections(args['misspellingsAndCorrections'])
         end
 
         private 
 
         def parse_corrections(raw)
-          corrections = []
+          suggestions = []
           raw.each_slice(2) do |k, v|
-            corrections << Correction.new(k, v)
+            suggestions << Suggestions.new(k, [Suggestion.new(v)])
           end
-          corrections
+          suggestions
         end
       end
 
-      class Correction
-        attr_reader :misspelling, :correction
+      # TODO: Rename this, make it enumerable?
+      class Suggestions
+        attr_reader :misspelling, :suggestions
 
-        def initialize(misspelling, correction)
+        def initialize(misspelling, suggestions)
           @misspelling = misspelling
-          @correction = correction
+          # TODO: FIXME
+          @suggestions = parse_suggestions(suggestions)
+        end
+
+        private
+
+        # TODO: FIXME
+        def parse_suggestions(suggestions)
+          []
         end
       end
 
-      attr_reader :corrections, :collations
+      class Suggestion
+        attr_reader :word
+
+        def initialize(word, freq = -1)
+          @word = word
+          @freq = freq
+        end
+
+        def to_s
+          @word
+        end
+      end
+
+      attr_reader :suggestions, :collations
       attr_writer :correctly_spelled
 
       def initialize
-        @corrections = []
+        @suggestions = []
         @collations = []
       end
 
@@ -57,6 +74,10 @@ module Sunspot
         else
           raise ArgumentError, "Don't know how to handle collation: #{collation_values}"
         end
+      end
+
+      def add_suggestion(word, suggest_values)
+        @suggestions << Suggestions.new(word, suggest_values)
       end
 
     end
@@ -83,19 +104,19 @@ module Sunspot
       end
 
 
-      def spelling_suggestions
-        suggestions = SpellingSuggestions.new
+      def spellcheck
+        spellcheck = Spellcheck.new
 
         raw_suggestions.each_slice(2) do |k, v|
           if k == 'collation'
-            suggestions.add_collation(v)
+            spellcheck.add_collation(v)
           elsif k == 'correctlySpelled'
-            suggestions.correctly_spelled = (v == 'true')
+            spellcheck.correctly_spelled = (v == 'true')
           else
-            #suggestions_hash[k] = v
+            spellcheck.add_suggestion(k, v)
           end
         end
-        suggestions
+        spellcheck
       end
 
       private
