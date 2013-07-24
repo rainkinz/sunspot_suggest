@@ -4,6 +4,23 @@ require 'spec_helper'
 # sunspot
 describe 'spellcheck', :type => :search do
 
+  context "spellcheck enabled but no results" do
+    it 'creates empty spellcheck_results' do
+      result = session.search Article do
+        fulltext 'perfrm hvc'
+        spellcheck
+      end
+
+      spellcheck = result.spellcheck_results
+      collations = spellcheck.collations
+      expect(collations.size).to eq(0)
+
+      corrections = spellcheck.suggestions
+      expect(corrections.size).to eq(0)
+    end
+
+  end
+
   context "spellcheck with extended results but no collations" do 
     before(:each) do 
       stub_spellcheck [

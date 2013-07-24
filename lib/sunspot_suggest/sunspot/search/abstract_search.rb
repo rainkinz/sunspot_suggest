@@ -124,7 +124,7 @@ module Sunspot
       private
 
       def raw_suggestions
-        ["spellcheck", "suggestions"].inject(@solr_result) {|h, k| h && h[k]}
+        ["spellcheck", "suggestions"].inject(@solr_result) {|h, k| h && h[k]} || []
       end
 
     end
